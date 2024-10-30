@@ -1,0 +1,18 @@
+Sample: holo.jpg
+	waveleght: 0.633 um
+	pixelSize: 3.75 um
+	Type: Simulated
+	
+	
+Sample: holo-RBC-20p205-2-3.png
+	waveleght: 0.532 um
+	pixelSize: 2.4 um
+	Type: Experimental
+	
+	
+Sample: Glioblastoma.jpg
+	waveleght: 0.533 um
+	pixelSize: 3.75 um
+	Type: Experimental
+
+	
