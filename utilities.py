@@ -158,11 +158,11 @@ def spatialFilteringCF_vortex_v2(inp, width, height, l_vortex):
 
 
 def search_initial_conditions(inp, lvortex):
-    width, height = (np.array(inp)).shape
+    height, width = (np.array(inp)).shape
     field_spec_vortex = vortexConvolution(inp, lvortex)
     
     # Mask the -1 diffraction term
-    mask = np.zeros((width, height))
+    mask = np.zeros((height, width))
     mask[0:height, 0:round(int(width/2))] = 1
     field_spec_tem = field_spec_vortex * mask
     
