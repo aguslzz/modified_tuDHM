@@ -98,11 +98,8 @@ def vortexConvolution(inp, l_vortex, plot = False):
 
     width, height = (np.array(inp)).shape
 
-    # Size of the image
-    size = width 
-
     # Generate a grid of x and y coordinates
-    y, x = np.ogrid[-size//2:size//2, -size//2:size//2]
+    y, x = np.ogrid[-height//2:height//2, -width//2:width//2]
 
     # Compute the angle from the origin in radians, and wrap it to the range [0, 2π]
     angle = np.arctan2(y, x)   # Angle in radians
@@ -111,7 +108,7 @@ def vortexConvolution(inp, l_vortex, plot = False):
     # Plot the vortex
     
     if plot:
-        plt.imshow(np.angle(vortex), cmap='gray', extent=(-size//2, size//2, -size//2, size//2))
+        plt.imshow(np.angle(vortex), cmap='gray')
         plt.colorbar(label="Angle (radians)")
         plt.title("Angle from Origin (0 to 2π)")
         plt.show()
@@ -278,10 +275,11 @@ def costFunction(seeds, width, height, holo_filter, wavelength, dxy, X, Y, fx_0,
     ref_wave = np.exp(1j * k * ((math.sin(theta_x) * X * dxy) + (math.sin(theta_y) * Y * dxy)))
     phase = np.angle(holo_filter * ref_wave)
     phase = phase + math.pi
-    # phase = (phase > 0.2)
-    # sumIB = phase.sum()
-    # J = (width * height) - sumIB
-    J = np.std(phase)
+
+    phase = (phase > 0.2)
+    sumIB = phase.sum()
+    J = (width * height) - sumIB
+    #J = np.std(phase)
 
     return J
 
