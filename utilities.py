@@ -160,6 +160,23 @@ def spatialFilteringCF_vortex_v2(inp, width, height, l_vortex):
     return out, fx_max, fy_max, fx_min, fy_min
 
 
+def search_initial_conditions(inp, lvortex):
+    width, height = (np.array(inp)).shape
+    field_spec_vortex = vortexConvolution(inp, lvortex)
+    
+    # Mask the -1 diffraction term
+    mask = np.zeros((width, height))
+    mask[0:height, 0:round(int(width/2))] = 1
+    field_spec_tem = field_spec_vortex * mask
+    
+    # Notice we assume that the minimun value pixel will be a better search starting 
+    # point than the maximum value pixel without the vortex convolution. 
+    minimum = np.amin(field_spec_tem)
+    fy_min, fx_min = np.where(field_spec_tem == minimum)
+    
+    return fx_min, fy_min
+
+    
 # Spatial filtering process for FCF implementation
 def spatialFilteringCF_vortex(inp, width, height, l_vortex):
     # inputs:
@@ -255,7 +272,7 @@ def costFunction(seeds, width, height, holo_filter, wavelength, dxy, X, Y, fx_0,
     # fx_0 - coordinate x DC diffraction
     # fy_0 - coordinate y DC diffraction
     # k - vector number
-    J = 0;
+    J = 0
     theta_x = math.asin((fx_0 - seeds[0]) * wavelength / (width * dxy))
     theta_y = math.asin((fy_0 - seeds[1]) * wavelength / (height * dxy))
     ref_wave = np.exp(1j * k * ((math.sin(theta_x) * X * dxy) + (math.sin(theta_y) * Y * dxy)))
@@ -266,6 +283,56 @@ def costFunction(seeds, width, height, holo_filter, wavelength, dxy, X, Y, fx_0,
     # J = (width * height) - sumIB
     J = np.std(phase)
 
+    return J
+
+def binarized_hologram_std_cf(seeds, width, height, holo_filter, wavelength, dxy, X, Y, fx_0, fy_0, k):
+    # inputs:
+    # seeds - seed for compute the minimization
+    # width - size image Y
+    # height - size image X
+    # holo_filter - complex object filter hologram
+    # dxy - pixel size
+    # X - coordinate X meshgrid
+    # Y - coordinate Y meshgrid
+    # fx_0 - coordinate x DC diffraction
+    # fy_0 - coordinate y DC diffraction
+    # k - vector number
+    J = 0
+    theta_x = math.asin((fx_0 - seeds[0]) * wavelength / (width * dxy))
+    theta_y = math.asin((fy_0 - seeds[1]) * wavelength / (height * dxy))
+    ref_wave = np.exp(1j * k * ((math.sin(theta_x) * X * dxy) + (math.sin(theta_y) * Y * dxy)))
+    phase = np.angle(holo_filter * ref_wave)
+    phase = phase + math.pi
+    # phase = (phase > 0.2)
+    # sumIB = phase.sum()
+    # J = (width * height) - sumIB
+    J = np.std(phase)
+
+    return J
+
+
+def binarized_hologram_maxsum_cf(seeds, width, height, holo_filter, wavelength, dxy, X, Y, fx_0, fy_0, k):
+    # inputs:
+    # seeds - seed for compute the minimization
+    # width - size image Y
+    # height - size image X
+    # holo_filter - complex object filter hologram
+    # dxy - pixel size
+    # X - coordinate X meshgrid
+    # Y - coordinate Y meshgrid
+    # fx_0 - coordinate x DC diffraction
+    # fy_0 - coordinate y DC diffraction
+    # k - vector number
+    J = 0
+    theta_x = math.asin((fx_0 - seeds[0]) * wavelength / (width * dxy))
+    theta_y = math.asin((fy_0 - seeds[1]) * wavelength / (height * dxy))
+    ref_wave = np.exp(1j * k * ((math.sin(theta_x) * X * dxy) + (math.sin(theta_y) * Y * dxy)))
+    phase = np.angle(holo_filter * ref_wave)
+    phase = phase + math.pi
+    phase = (phase > 0.2)
+    sumIB = phase.sum()
+    J = (width * height) - sumIB
+    
     return J
 
 
