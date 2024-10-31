@@ -166,6 +166,7 @@ def search_initial_conditions(inp, lvortex):
     mask[0:height, 0:round(int(width/2))] = 1
     field_spec_tem = field_spec_vortex * mask
     
+    
     # Notice we assume that the minimun value pixel will be a better search starting 
     # point than the maximum value pixel without the vortex convolution. 
     minimum = np.amin(field_spec_tem)
