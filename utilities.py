@@ -361,7 +361,7 @@ def reconstruction(field, wavelength, dxy, distance, method, cf):
     # propagation of the complex object filed by implemented the AngularSpectrum
     comp_phase = angularSpectrum(comp_phase, width, height, wavelength, distance, dxy)
 
-    return comp_phase, res
+    return comp_phase, res, execution_time
 
 
 
@@ -384,7 +384,7 @@ def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex, method,
 
     # The spatial filtering process is executed
     print("Spatial filtering process started.....")
-    b, fx_max, fy_max, fx_min, fy_min = spatialFilteringCF_vortex_v2(field, width, height, l_vortex)
+    fx_min, fy_min = search_initial_conditions(field, l_vortex)
     print("Spatial filtering process finished.")
 
     holo_filter, aa, aaa = spatialFilteringCF(field, width, height)
@@ -421,7 +421,7 @@ def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex, method,
     # propagation of the complex object filed by implemented the AngularSpectrum
     comp_phase = angularSpectrum(comp_phase, width, height, wavelength, distance, dxy)
 
-    return comp_phase, res
+    return comp_phase, res, execution_time
 
 
 
