@@ -308,7 +308,7 @@ def binarized_hologram_maxsum_cf(seeds, width, height, holo_filter, wavelength, 
 
 
 # function to retrieve the complex object information from an off-axis hologram
-def reconstruction(field, wavelength, dxy, distance):
+def reconstruction(field, wavelength, dxy, distance, method, cf):
     # inputs:
     # field: hologram to reconstruct
     # wavelength: wavelength used to register the hologram
@@ -337,8 +337,8 @@ def reconstruction(field, wavelength, dxy, distance):
     # minimization
     print("Minimization process started.....")
     start_time = time.time()
-    res = minimize(binarized_hologram_std_cf, seeds, args=(width, height, holo_filter, wavelength, dxy, X, Y, fx_0, fy_0, k),
-                   method='Nelder-Mead', bounds=bounds, tol=1e-9)
+    res = minimize(cf, seeds, args=(width, height, holo_filter, wavelength, dxy, X, Y, fx_0, fy_0, k),
+                   method=method, bounds=bounds, tol=1e-9)
     end_time = time.time()
     print(f"Minimization process finished. Cost function value = {res.fun}")
     execution_time = end_time - start_time
@@ -367,7 +367,7 @@ def reconstruction(field, wavelength, dxy, distance):
 
 
 # function to retrieve the complex object information from an off-axis hologram
-def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex):
+def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex, method, cf):
     # inputs:
     # field: hologram to reconstruct
     # wavelength: wavelength used to register the hologram
@@ -397,8 +397,8 @@ def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex):
     # minimization
     print("Minimization process started.....")
     start_time = time.time()
-    res = minimize(binarized_hologram_std_cf, seeds, args=(width, height, holo_filter, wavelength, dxy, X, Y, fx_0, fy_0, k),
-                   method='Nelder-Mead', bounds=bounds, tol=1e-9)
+    res = minimize(cf, seeds, args=(width, height, holo_filter, wavelength, dxy, X, Y, fx_0, fy_0, k),
+                   method=method, bounds=bounds, tol=1e-9)
     end_time = time.time()
     print(f"Minimization process finished. Cost function value = {res.fun}")
     execution_time = end_time - start_time
