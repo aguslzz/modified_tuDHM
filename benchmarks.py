@@ -102,8 +102,8 @@ for params in product(holograms.items(), cost_functions.items(), optimization_me
     
     J = res.fun
     
-    save_phase_path = f'./results/{holo_name}/{holo_name}_{cost_function_name}_{opti_method}_phase.png'
-    save_amplitude_path = f'./results/{holo_name}/{holo_name}_{cost_function_name}_{opti_method}_amplitude.png'
+    save_phase_path = f'./results/{holo_name}/{holo_name}_{reconstruction_func_name}_{cost_function_name}_{opti_method}_phase.png'
+    save_amplitude_path = f'./results/{holo_name}/{holo_name}_{reconstruction_func_name}_{cost_function_name}_{opti_method}_amplitude.png'
     
     # Save the results as images
     # ut.imageSave does not exist
