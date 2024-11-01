@@ -367,7 +367,7 @@ def reconstruction(field, wavelength, dxy, distance, method, cf):
 
 
 # function to retrieve the complex object information from an off-axis hologram
-def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex, method, cf):
+def reconstruction_vortex_v2(field, wavelength, dxy, distance, method, cf, l_vortex=1):
     # inputs:
     # field: hologram to reconstruct
     # wavelength: wavelength used to register the hologram
@@ -421,7 +421,7 @@ def reconstruction_vortex_v2(field, wavelength, dxy, distance, l_vortex, method,
     # propagation of the complex object filed by implemented the AngularSpectrum
     comp_phase = angularSpectrum(comp_phase, width, height, wavelength, distance, dxy)
 
-    return comp_phase, res, execution_time
+    return comp_phase, res,  execution_time
 
 
 
