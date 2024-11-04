@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import subprocess
 import platform
+import os
 
 save_excel = True
 
@@ -102,18 +103,30 @@ for params in product(holograms.items(), cost_functions.items(), optimization_me
     
     J = res.fun
     
-    save_phase_path = f'./results/{holo_name}/{holo_name}_{reconstruction_func_name}_{cost_function_name}_{opti_method}_phase.png'
-    save_amplitude_path = f'./results/{holo_name}/{holo_name}_{reconstruction_func_name}_{cost_function_name}_{opti_method}_amplitude.png'
+    save_phase_path = f'./results/{holo_name}/'
+    save_amplitude_path = f'./results/{holo_name}/'
+
+    os.makedirs(save_phase_path, exist_ok=True)
+    os.makedirs(save_amplitude_path, exist_ok=True)
+
+    amplitude_image_name = f'{holo_name}_{reconstruction_func_name}_{cost_function_name}_{opti_method}_amplitude.npy'
+    phase_image_name = f'{holo_name}_{reconstruction_func_name}_{cost_function_name}_{opti_method}_phase.npy'
     
     # Save the results as images
+    
     # ut.imageSave does not exist
     # this does not work since amplitude is numpy array
     
-    amplitude_image = Image.fromarray(amplitude.astype(np.int32))
-    phase_image = Image.fromarray(phase.astype(np.int32))
+    #amplitude_image = Image.fromarray(amplitude.astype(np.int32))
+    #phase_image = Image.fromarray(phase.astype(np.int32))
     
-    amplitude_image.save(save_amplitude_path, mode='I')
-    phase_image.save(save_phase_path, mode='I')
+    #amplitude_image.save(save_amplitude_path + amplitude_image_name, mode='I')
+    #phase_image.save(save_phase_path + phase_image_name, mode='I')
+
+    np.save(save_amplitude_path + amplitude_image_name, amplitude)
+    np.save(save_phase_path + phase_image_name, phase)
+
+
     
     new_row = pd.Series({
         'Hologram Name': holo_name,
@@ -128,13 +141,16 @@ for params in product(holograms.items(), cost_functions.items(), optimization_me
         'Fx Sol': fx_sol,
         'Fy Sol': fy_sol,
         'J Sol': J,
-        'AmplitudeSolPath': save_amplitude_path,
-        'PhaseSolPath': save_phase_path,
+        'AmplitudeSolPath': save_amplitude_path + amplitude_image_name,
+        'PhaseSolPath': save_phase_path + phase_image_name,
         'CPU': processor,  # Add CPU information
     })
 
+
+    new_row_df = pd.DataFrame([new_row])
+
     # Assuming benchmark_data DataFrame already exists
-    benchmark_data = benchmark_data.append(new_row, ignore_index=True)
+    benchmark_data = pd.concat([benchmark_data, new_row_df], ignore_index=True)
     
     
 if save_excel:

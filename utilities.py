@@ -453,5 +453,3 @@ def angularSpectrum(field, width, height, wavelength, distance, dxy):
     out = np.fft.ifftshift(out)
 
     return out
-
-
